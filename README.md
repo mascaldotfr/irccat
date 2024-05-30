@@ -1,4 +1,20 @@
-# irccat with Q support, instead of Nickserv
+# irccat with Quakenet's Q support alongside Nickserv
+
+This fork introduces authentication to Q, with additionnal cloaking (it's the
+main reason of the fork) To enable it, use the following in your
+[irccat.json](examples/irccat.json):
+
+```
+"irc": {
+[...]
+"identify\_type": "Q",
+"identify\_nick": "<your account name>",
+"identify\_pass": "<your password>",
+[...]
+```
+
+Note that you can't still use nickserv by setting `identify_type` to `nickserv`
+or any other string.
 
 # irccat
 <a href="https://www.irccloud.com/invite?channel=%23irccat&amp;hostname=irc.irccloud.com&amp;port=6697&amp;ssl=1" target="_blank"><img src="https://img.shields.io/badge/IRC-%23irccat-1e72ff.svg?style=flat"  height="20"></a>

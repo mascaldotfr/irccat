@@ -70,7 +70,16 @@ func (i *IRCCat) connectIRC(debug bool) error {
 
 func (i *IRCCat) handleWelcome(e *irc.Event) {
 	log.Infof("Negotiated IRCv3 capabilities: %v", i.irc.AcknowledgedCaps)
-	if viper.IsSet("irc.identify_pass") && viper.GetString("irc.identify_pass") != "" {
+	if viper.IsSet("irc.identify_type") && viper.GetString("irc.identify_type") == "Q" &&
+		viper.IsSet("irc.identify_nick") && viper.GetString("irc.identify_nick") != "" &&
+		viper.IsSet("irc.identify_pass") && viper.GetString("irc.identify_pass") != "" {
+		log.Infof("Authenticating to Q...")
+		i.irc.SendRawf("AUTH %s %s",
+			viper.GetString("irc.identify_nick"),
+			viper.GetString("irc.identify_pass"))
+		i.irc.SendRawf("MODE %s +x", viper.GetString("irc.nick"))
+		time.Sleep(5 * time.Second)
+	} else if viper.IsSet("irc.identify_pass") && viper.GetString("irc.identify_pass") != "" {
 		i.irc.SendRawf("NICKSERV IDENTIFY %s", viper.GetString("irc.identify_pass"))
 	}
 
