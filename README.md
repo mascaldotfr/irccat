@@ -9,9 +9,9 @@ main reason of the fork) To enable it, use the following in your
 ```
 "irc": {
 [...]
-"identify\_type": "Q",
-"identify\_nick": "<your account name>",
-"identify\_pass": "<your password>",
+"identify_type": "Q",
+"identify_nick": "<your account name>",
+"identify_pass": "<your password>",
 [...]
 ```
 
