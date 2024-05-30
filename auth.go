@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/thoj/go-ircevent"
 	"strings"
+	"time"
 )
 
 func (i *IRCCat) inChannel(channel string) bool {
@@ -46,4 +47,9 @@ func (i *IRCCat) handleNick(e *irc.Event) {
 		delete(i.auth_users, e.Nick)
 		i.auth_users[e.Arguments[0]] = true
 	}
+}
+
+func (i *IRCCat) handleKick(e *irc.Event) {
+	time.Sleep(5 * time.Second)
+	i.irc.Join(e.Arguments[0])
 }

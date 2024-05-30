@@ -64,6 +64,7 @@ func (i *IRCCat) connectIRC(debug bool) error {
 	irccon.AddCallback("QUIT", i.handleQuit)
 	irccon.AddCallback("KILL", i.handleQuit)
 	irccon.AddCallback("NICK", i.handleNick)
+	irccon.AddCallback("KICK", i.handleKick)
 
 	return nil
 }
