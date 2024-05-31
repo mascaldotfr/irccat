@@ -1,17 +1,50 @@
-name: Main
 on:
-  - pull_request
-  - push
+  push:
+    branches:
+    - q
+  workflow_dispatch:
+
+env:
+  TARGET: irccat-q-latest-linux-amd64.tar.gz
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: stable
-      - name: Check Formatting
-        run: gofmt -d -e .
-      - name: Tests
-        run: go test -v ./...
+    - uses: actions/checkout@v3
+    - name: build
+      if: always()
+      run: |
+        sudo apt update
+        sudo apt install golang-1.20 binutils
+        go build
+        strip irccat
+        tar cvzf ${{env.TARGET}} irccat examples/* README.md
+
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: packages
+        path: ${{env.TARGET}}
+
+  release:
+      needs: [build]
+      permissions: write-all
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/download-artifact@v4
+          with:
+            name: packages
+            path: ${{env.TARGET}}
+
+        - name: release
+          uses: marvinpinto/action-automatic-releases@latest
+          with:
+            title: Continuous build
+            automatic_release_tag: continuous
+            prerelease: false
+            draft: false
+            files: ${{env.TARGET}}
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
